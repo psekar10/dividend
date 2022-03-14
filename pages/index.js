@@ -1,69 +1,95 @@
-import Head from 'next/head'
+import Head from 'next/head';
+import { useState } from 'react';
 
 export default function Home() {
+  const [stockVal, setStockVal] = useState(0);
+  const [annualDividend, setAnnualDividend] = useState(0);
+  const [numberOfStocks, setnumberOfStocks] = useState(0);
+  const [totalAnnualDividend, setTotalAnnualDividend] = useState(0);
+  const handleChange = (e, type) => {
+    let numberOfstocks, dividendValueIntotal;
+    if (type === "stock") {
+      dividendValueIntotal = Number(e.target.value) * annualDividend;
+      numberOfstocks = e.target.value;
+    }
+    if (type === "dividend") {
+      numberOfstocks = Number(e.target.value) / annualDividend;
+      dividendValueIntotal = e.target.value;
+    }
+    setnumberOfStocks(numberOfstocks);
+    setTotalAnnualDividend(dividendValueIntotal);
+  };
   return (
-    <div className="container">
+    <div className="container ">
       <Head>
         <title>Create Next App</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      <h1 className="subtitle">
+        Dividend Calculator
+      </h1>
+      <table className="card ">
+      <tbody>
+        <tr>
+          <td>
+            <label>Stock Value: </label>
+          </td>
+          <td>
+            <input
+              type="number"
+              value={stockVal}
+              onChange={(e) => setStockVal(e.target.value)}
+            />
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <label>Annual dividend per stock: </label>
+          </td>
+          <td>
+            <input
+              type="number"
+              value={annualDividend}
+              onChange={(e) => setAnnualDividend(e.target.value)}
+            />
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <label>Number of stocks to buy: </label>
+          </td>
+          <td>
+            <input
+              type="number"
+              value={numberOfStocks}
+              disabled={stockVal === 0 || annualDividend === 0}
+              onChange={(e) => handleChange(e, "stock")}
+            />
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <label>Annual dividend: </label>
+          </td>
+          <td>
+            <input
+              type="number"
+              value={totalAnnualDividend}
+              disabled={stockVal === 0 || annualDividend === 0}
+              onChange={(e) => handleChange(e, "dividend")}
+            />
+          </td>
+        </tr>
+      </tbody>
 
-      <main>
-        <h1 className="title">
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
-
-        <p className="description">
-          Get started by editing <code>pages/index.js</code>
-        </p>
-
-        <div className="grid">
-          <a href="https://nextjs.org/docs" className="card">
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className="card">
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className="card"
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className="card"
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
-      </main>
-
-      <footer>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel" className="logo" />
-        </a>
-      </footer>
-
+    </table>
+    <p>Total money needed: <b>{numberOfStocks * stockVal} USD</b></p>
       <style jsx>{`
         .container {
           min-height: 100vh;
           padding: 0 0.5rem;
           display: flex;
+          background: linear-gradient(45deg, #fbbe6b, #f13ea3);
           flex-direction: column;
           justify-content: center;
           align-items: center;
@@ -78,29 +104,6 @@ export default function Home() {
           align-items: center;
         }
 
-        footer {
-          width: 100%;
-          height: 100px;
-          border-top: 1px solid #eaeaea;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        }
-
-        footer img {
-          margin-left: 0.5rem;
-        }
-
-        footer a {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        }
-
-        a {
-          color: inherit;
-          text-decoration: none;
-        }
 
         .title a {
           color: #0070f3;
@@ -157,13 +160,13 @@ export default function Home() {
           text-decoration: none;
           border: 1px solid #eaeaea;
           border-radius: 10px;
+          box-shadow:rgb(0 0 0 / 9%) 0px 6px 10px 1px;
           transition: color 0.15s ease, border-color 0.15s ease;
         }
 
         .card:hover,
         .card:focus,
         .card:active {
-          color: #0070f3;
           border-color: #0070f3;
         }
 
@@ -178,9 +181,6 @@ export default function Home() {
           line-height: 1.5;
         }
 
-        .logo {
-          height: 1em;
-        }
 
         @media (max-width: 600px) {
           .grid {
@@ -195,6 +195,7 @@ export default function Home() {
         body {
           padding: 0;
           margin: 0;
+
           font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
             Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue,
             sans-serif;
